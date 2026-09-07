@@ -32,7 +32,6 @@ jobs:
             zip
             unzip
             curl
-            7z
 
       - name: build-windows
         shell: msys2 {0}
