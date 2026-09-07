@@ -110,12 +110,34 @@ extract_member() {
     return 1
 }
 
-# Extract whole archive into a directory
+# Extract whole archive into a directory.
+# Prefer 7z: it correctly handles ZIPs that use backslash path separators
+# (common in Windows-built releases such as DLSS5-Feeder).
 extract_zip() {
     local zip_path="$1"
     local dest_dir="$2"
     mkdir -p "$dest_dir"
-    unzip -q -o "$zip_path" -d "$dest_dir"
+
+    if command -v 7z &>/dev/null; then
+        # -y = assume Yes, -o = output dir (no space after -o)
+        7z x -y -o"$dest_dir" "$zip_path" >/dev/null
+        return $?
+    fi
+
+    # Fallback: unzip. Some builds warn about backslashes but still extract.
+    # Redirect stderr so the backslash warning does not look like a hard error.
+    if unzip -q -o "$zip_path" -d "$dest_dir" 2>/dev/null; then
+        return 0
+    fi
+
+    # Last resort: try unzip even if it printed the backslash warning
+    unzip -o "$zip_path" -d "$dest_dir" 2>&1 | grep -v "backslashes as path separators" || true
+    # Check whether anything was actually extracted
+    if [[ -z "$(find "$dest_dir" -type f | head -1)" ]]; then
+        log_error "Failed to extract $zip_path"
+        return 1
+    fi
+    return 0
 }
 
 # ---------------------------------------------------------------------------
