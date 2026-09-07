@@ -34,6 +34,30 @@ This repository contains the build scripts that package all required components 
 | `F6` | Toggle Neural Rendering (add-on hotkey) |
 | `F5` | Save a screenshot (add-on hotkey) |
 
+## Bonus: RTX Video Super Resolution (VSR)
+
+If you also want to use RTX Video Super Resolution (VSR) together with MPV (e.g. to upscale videos below your display's native resolution), you have two options.
+
+**Option 1 — command line / shortcut**: append the following to the **Target** field of a shortcut for `mpv.exe`, or type it after `mpv` in a terminal:
+
+```
+--vf=d3d11vpp=scale=2:scaling-mode=nvidia
+```
+
+**Option 2 — `mpv.conf`**: add the same option to your `mpv.conf` (portable mode: next to `mpv.exe`; otherwise: `%APPDATA%\mpv\mpv.conf`):
+
+```
+vf=d3d11vpp=scale=2:scaling-mode=nvidia
+```
+
+Note: if you also have other video filters, list them in the same `vf=` entry separated by commas, e.g.:
+
+```
+vf=your_other_filter,d3d11vpp=scale=2:scaling-mode=nvidia
+```
+
+This is a nice addition for people using MPV with DLSS 5.
+
 ## Notes
 
 - All components (ReShade, shaders, add-ons, NVIDIA runtime DLLs) are downloaded from the internet and are the property of their respective authors. This project does not modify or host them — it only bundles and distributes them for convenience.
