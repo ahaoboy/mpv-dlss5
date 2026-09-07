@@ -1,0 +1,55 @@
+name: update
+
+permissions:
+  contents: write
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -CeEuo pipefail {0}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    name: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          path-type: inherit
+          install: >-
+            zip
+            unzip
+            curl
+            7z
+
+      - name: build-windows
+        shell: msys2 {0}
+        run: |
+          mkdir ./externals
+          bash build.sh externals
+          tar -cJf "mpv-dlss5.tar.xz" script.json externals
+          zip -rq "mpv-dlss5.zip" script.json externals
+
+      - name: release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "nightly"
+          name: "nightly"
+          artifacts: '*.xz,*.zip'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          commit: main
+          replacesArtifacts: true
+
