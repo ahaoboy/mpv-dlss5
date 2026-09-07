@@ -198,26 +198,57 @@ step_headers() {
 step_feeder() {
     log_step "3. DLSS5-Feeder"
 
-    # Prefer a known good recent release (can be updated later)
-    local tag="v0.14.0-beta.4"
-    local zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/DLSS5-Feeder-${tag#v}.zip"
-    local zip_file="$CACHE_DIR/DLSS5-Feeder-${tag}.zip"
+    # Recent releases put files under a versioned folder, e.g.:
+    #   DLSS5-Feeder-0.14.0-beta.5/reshade-shaders/Shaders/DLSS5_Feed.fx
+    #   DLSS5-Feeder-0.14.0-beta.5/dlss5-feed.addon64
+    # Always extract the whole zip and use find — more reliable than
+    # extract_member with wildcards (which previously produced empty files).
+    local tag="v0.14.0-beta.5"
+    local zip_name="DLSS5-Feeder-${tag#v}.zip"
+    local zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/${zip_name}"
+    local zip_file="$CACHE_DIR/${zip_name}"
+
+    # Fallback to beta.4 if beta.5 is not available
+    if ! curl -fsI "$zip_url" >/dev/null 2>&1; then
+        tag="v0.14.0-beta.4"
+        zip_name="DLSS5-Feeder-${tag#v}.zip"
+        zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/${zip_name}"
+        zip_file="$CACHE_DIR/${zip_name}"
+        log_info "beta.5 not found, falling back to $tag"
+    fi
 
     download "$zip_url" "$zip_file" "DLSS5-Feeder $tag"
 
-    # Extract the two essential files
-    if ! extract_member "$zip_file" "dlss5-feed.addon64" "$MPV_DIR/dlss5-feed.addon64"; then
-        local tmp="$WORK_DIR/feeder"
-        extract_zip "$zip_file" "$tmp"
-        find "$tmp" -name "dlss5-feed.addon64" -exec cp {} "$MPV_DIR/" \;
-    fi
+    local tmp="$WORK_DIR/feeder"
+    rm -rf "$tmp"
+    extract_zip "$zip_file" "$tmp"
 
-    mkdir -p "$MPV_DIR/reshade-shaders/Shaders"
-    if ! extract_member "$zip_file" "DLSS5_Feed.fx" "$MPV_DIR/reshade-shaders/Shaders/DLSS5_Feed.fx"; then
-        local tmp="$WORK_DIR/feeder"
-        [[ -d "$tmp" ]] || extract_zip "$zip_file" "$tmp"
-        find "$tmp" -name "DLSS5_Feed.fx" -exec cp {} "$MPV_DIR/reshade-shaders/Shaders/" \;
+    # --- addon ---
+    local addon
+    addon=$(find "$tmp" -type f -name "dlss5-feed.addon64" | head -1)
+    if [[ -z "$addon" || ! -s "$addon" ]]; then
+        log_error "dlss5-feed.addon64 not found (or empty) inside $zip_name"
+        return 1
     fi
+    cp -f "$addon" "$MPV_DIR/dlss5-feed.addon64"
+    log_ok "dlss5-feed.addon64 ($(wc -c < "$MPV_DIR/dlss5-feed.addon64") bytes)"
+
+    # --- shader (critical: must not be empty) ---
+    mkdir -p "$MPV_DIR/reshade-shaders/Shaders"
+    local shader
+    shader=$(find "$tmp" -type f -name "DLSS5_Feed.fx" | head -1)
+    if [[ -z "$shader" || ! -s "$shader" ]]; then
+        log_error "DLSS5_Feed.fx not found (or empty) inside $zip_name"
+        return 1
+    fi
+    cp -f "$shader" "$MPV_DIR/reshade-shaders/Shaders/DLSS5_Feed.fx"
+    local sz
+    sz=$(wc -c < "$MPV_DIR/reshade-shaders/Shaders/DLSS5_Feed.fx")
+    if [[ "$sz" -lt 1000 ]]; then
+        log_error "DLSS5_Feed.fx is suspiciously small ($sz bytes) — extraction failed"
+        return 1
+    fi
+    log_ok "DLSS5_Feed.fx ($sz bytes)"
 
     echo "$tag" > "$MPV_DIR/$FEEDER_MARKER"
     log_ok "DLSS5-Feeder $tag installed"
@@ -372,7 +403,12 @@ verify() {
 
     for f in "${required[@]}"; do
         if [[ -f "$MPV_DIR/$f" ]]; then
-            log_ok "$f"
+            if [[ "$f" == *DLSS5_Feed.fx && ! -s "$MPV_DIR/$f" ]]; then
+                log_error "Empty file: $f (extraction failed earlier)"
+                missing=$((missing + 1))
+            else
+                log_ok "$f"
+            fi
         else
             log_error "Missing: $f"
             missing=$((missing + 1))

@@ -38,8 +38,11 @@ jobs:
         run: |
           mkdir ./externals
           bash build.sh externals
-          tar -cJf "mpv-dlss5.tar.xz" script.json externals
-          zip -rq "mpv-dlss5.zip" script.json externals
+
+          cd externals
+          tar -cJf "../mpv-dlss5.tar.xz" ./
+          zip -rq "../mpv-dlss5.zip" ./
+
 
       - name: release
         uses: ncipollo/release-action@v1
