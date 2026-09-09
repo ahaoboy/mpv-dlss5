@@ -44,6 +44,18 @@ The images below show the before and after effect when the DLSS 5 pipeline is ac
 | `F6` | Toggle Neural Rendering (add-on hotkey) |
 | `F5` | Save a screenshot (add-on hotkey) |
 
+### Home key conflict
+
+By default, mpv uses **Home** to jump to the beginning of the video, which conflicts with ReShade's **Home** shortcut for opening the overlay menu. If you run into this, pick one of the following fixes:
+
+**Option A — disable the mpv Home binding**: create `portable_config\input.conf` next to `mpv.exe` and add:
+
+```
+HOME ignore
+```
+
+**Option B — rebind the ReShade hotkey**: open ReShade → **Menu** → **Settings** → **Hotkeys** → toggle/bind the overlay shortcut to a different key.
+
 ## Bonus: RTX Video Super Resolution (VSR)
 
 If you also want to use RTX Video Super Resolution (VSR) together with MPV (e.g. to upscale videos below your display's native resolution), you have two options.
