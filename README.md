@@ -18,7 +18,17 @@ This repository contains the build scripts that package all required components 
 2. Extract the archive into the folder that contains `mpv.exe`.
 3. Launch mpv as usual.
 
+## Effect Comparison
+
+The images below show the before and after effect when the DLSS 5 pipeline is active.
+
+![Before DLSS 5](https://github.com/user-attachments/assets/ca4fb83b-dac1-44cf-b07d-f547eaa41407)
+
+![After DLSS 5](https://github.com/user-attachments/assets/24cc9265-8b4c-427c-9e41-e0a58bcee680)
+
 ## Usage
+
+> Important: press **Home** at the very beginning of playback to open the ReShade menu before the video starts. If you open the menu too late, or after playback has already started, the player may freeze or become unstable.
 
 1. Start playing a video and press **Home** to open the ReShade menu.
 2. In the ReShade menu:
