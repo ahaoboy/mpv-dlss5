@@ -221,23 +221,14 @@ step_feeder() {
     log_step "3. DLSS5-Feeder"
 
     # Recent releases put files under a versioned folder, e.g.:
-    #   DLSS5-Feeder-0.14.0-beta.5/reshade-shaders/Shaders/DLSS5_Feed.fx
-    #   DLSS5-Feeder-0.14.0-beta.5/dlss5-feed.addon64
+    #   DLSS5-Feeder-0.15.1/reshade-shaders/Shaders/DLSS5_Feed.fx
+    #   DLSS5-Feeder-0.15.1/dlss5-feed.addon64
     # Always extract the whole zip and use find — more reliable than
     # extract_member with wildcards (which previously produced empty files).
-    local tag="v0.14.0-beta.5"
+    local tag="v0.15.1"
     local zip_name="DLSS5-Feeder-${tag#v}.zip"
     local zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/${zip_name}"
     local zip_file="$CACHE_DIR/${zip_name}"
-
-    # Fallback to beta.4 if beta.5 is not available
-    if ! curl -fsI "$zip_url" >/dev/null 2>&1; then
-        tag="v0.14.0-beta.4"
-        zip_name="DLSS5-Feeder-${tag#v}.zip"
-        zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/${zip_name}"
-        zip_file="$CACHE_DIR/${zip_name}"
-        log_info "beta.5 not found, falling back to $tag"
-    fi
 
     download "$zip_url" "$zip_file" "DLSS5-Feeder $tag"
 
