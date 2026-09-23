@@ -225,7 +225,7 @@ step_feeder() {
     #   DLSS5-Feeder-0.15.1/dlss5-feed.addon64
     # Always extract the whole zip and use find — more reliable than
     # extract_member with wildcards (which previously produced empty files).
-    local tag="v0.15.1"
+    local tag="1.17.0-beta.1"
     local zip_name="DLSS5-Feeder-${tag#v}.zip"
     local zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/${zip_name}"
     local zip_file="$CACHE_DIR/${zip_name}"
@@ -307,8 +307,9 @@ step_dlss5() {
 
     # ----- 5a. renodx-dlss5.addon64 (from RankFTW/rhi-repo) -----
     # Latest known good tag (update this when a newer one appears)
-    local addon_tag="renodx-dlss5-4.70"
-    local addon_zip_name="renodx-dlss5_4.70.zip"
+    local ver="6.5.3"
+    local addon_tag="renodx-dlss5-${ver}"
+    local addon_zip_name="renodx-dlss5_${ver}.zip"
     local addon_url="https://github.com/RankFTW/rhi-repo/releases/download/${addon_tag}/${addon_zip_name}"
     local addon_zip="$CACHE_DIR/${addon_zip_name}"
 

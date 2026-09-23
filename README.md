@@ -12,11 +12,18 @@ This repository contains the build scripts that package all required components 
 
 ## Installation
 
-1. Download one of the nightly builds:
-   - `mpv-dlss5.zip`: https://github.com/ahaoboy/mpv-dlss5/releases/download/nightly/mpv-dlss5.zip
-   - `mpv-dlss5.tar.xz`: https://github.com/ahaoboy/mpv-dlss5/releases/download/nightly/mpv-dlss5.tar.xz
-2. Extract the archive into the folder that contains `mpv.exe`.
+###
+1. Download `mpv-dlss5.zip`: https://github.com/ahaoboy/mpv-dlss5/releases/download/nightly/mpv-dlss5.zip
+2. Extract the **externals** folder in archive into the folder that contains `mpv.exe`.
 3. Launch mpv as usual.
+
+### mpv-build
+
+https://mpv-easy.github.io/mpv-build
+
+1. Download `mpv-dlss5.zip`: https://github.com/ahaoboy/mpv-dlss5/releases/download/nightly/mpv-dlss5.zip
+2. Drag and upload to mpv-build
+3. Download mpv-osc.zip
 
 ## Effect Comparison
 
@@ -54,7 +61,7 @@ By default, mpv uses **Home** to jump to the beginning of the video, which confl
 HOME ignore
 ```
 
-**Option B — rebind the ReShade hotkey**: open ReShade → **Menu** → **Settings** → **Hotkeys** → toggle/bind the overlay shortcut to a different key.
+**Option B — rebind the ReShade hotkey**: open ReShade → **Menu** → **Settings** → **Hotkeys** toggle/bind the overlay shortcut to a different key.
 
 ## Bonus: RTX Video Super Resolution (VSR)
 

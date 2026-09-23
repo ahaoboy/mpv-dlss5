@@ -39,10 +39,7 @@ jobs:
           mkdir ./externals
           bash build.sh externals
 
-          cd externals
-          tar -cJf "../mpv-dlss5.tar.xz" ./
-          zip -rq "../mpv-dlss5.zip" ./
-
+          zip -rq mpv-dlss5.zip externals mpv.conf input.conf script.json
 
       - name: release
         uses: ncipollo/release-action@v1
