@@ -12,7 +12,7 @@ This repository contains the build scripts that package all required components 
 
 ## Installation
 
-###
+### Manual installation
 1. Download `mpv-dlss5.zip`: https://github.com/ahaoboy/mpv-dlss5/releases/download/nightly/mpv-dlss5.zip
 2. Extract the **externals** folder in archive into the folder that contains `mpv.exe`.
 3. Launch mpv as usual.
@@ -22,8 +22,14 @@ This repository contains the build scripts that package all required components 
 https://mpv-easy.github.io/mpv-build
 
 1. Download `mpv-dlss5.zip`: https://github.com/ahaoboy/mpv-dlss5/releases/download/nightly/mpv-dlss5.zip
-2. Drag and upload to mpv-build
-3. Download mpv-osc.zip
+2. Drag and upload to mpv-build.
+3. Download mpv-osc.zip.
+
+
+
+https://github.com/user-attachments/assets/afcc06f1-e1c9-4496-a8a1-afc8fc65dc0a
+
+
 
 ## Effect Comparison
 
