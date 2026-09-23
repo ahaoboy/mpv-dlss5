@@ -225,8 +225,8 @@ step_feeder() {
     #   DLSS5-Feeder-0.15.1/dlss5-feed.addon64
     # Always extract the whole zip and use find — more reliable than
     # extract_member with wildcards (which previously produced empty files).
-    local tag="1.17.0-beta.1"
-    local zip_name="DLSS5-Feeder-v${tag#v}.zip"
+    local tag="v1.17.0-beta.1"
+    local zip_name="DLSS5-Feeder-${tag#v}.zip"
     local zip_url="https://github.com/jlrouzies-fr/DLSS5-Feeder/releases/download/${tag}/${zip_name}"
     local zip_file="$CACHE_DIR/${zip_name}"
 
